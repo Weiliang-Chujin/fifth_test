@@ -30,10 +30,11 @@ public class PlayerData : MonoBehaviour
     {
         StringBuilder stringBuilder = new StringBuilder();
         
+        //修改金币数
         coinNum += modifycoinNum;
         totalCoin.text = coinNum.ToString();
 
-        //玩家分数超过最大分数，修改为最大分数
+        //修改分数，玩家分数超过最大分数，修改为最大分数
         score += modifyScore;
         if (score >= playerController.maxScore)
         {
@@ -41,8 +42,8 @@ public class PlayerData : MonoBehaviour
         }
         totalScore.text = score.ToString();
 
-        //玩家分数小于4000时没有段位
-        if (score < 4000)
+        //修改段位，玩家分数小于4000时没有段位
+        if (score < playerController.minScore)
         {
             levelText.text = "无段位";
         }
