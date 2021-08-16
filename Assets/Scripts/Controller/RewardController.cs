@@ -99,6 +99,6 @@ public class RewardController : MonoBehaviour
     public void receiveReward(RewardPrefab rewardobj)
     {
         ModifyRewardState(1, rewardobj);
-        playerData.modifyPlayerInfo(0, playerController.segmentScore);
+        playerData.modifyPlayerInfo(0, playerController.rewardCoin);
     }
 }
