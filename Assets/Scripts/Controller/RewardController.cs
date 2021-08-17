@@ -23,7 +23,7 @@ public class RewardController : MonoBehaviour
     }
 
     //根据玩家分数生成奖励列表
-    public void CreateReward(int playerSocre)
+    private void CreateReward(int playerSocre)
     {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < gameController.rewardCount; i++)
@@ -96,7 +96,7 @@ public class RewardController : MonoBehaviour
     }
     
     //点击领取奖励按钮领取奖励
-    public void ReceiveReward(RewardPrefab rewardobj)
+    private void ReceiveReward(RewardPrefab rewardobj)
     {
         ModifyRewardState(1, rewardobj);
         playerController.ModifyPlayerInfo(0, gameController.rewardCoin);

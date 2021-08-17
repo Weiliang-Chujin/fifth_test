@@ -58,7 +58,7 @@ public class GameController : MonoBehaviour
     }
 
     //增加分数函数,每次增加100分,分数上限6000,增加一次分数，判断分数是否能开启下一个奖励，改变该奖励的遮罩
-    public void AddScore()
+    private void AddScore()
     {
         int index; //查找在奖励列表的索引
         
@@ -72,7 +72,7 @@ public class GameController : MonoBehaviour
     }
     
     //查看当前段位情况函数,滚动视图自动滚动到当前达到的最高分数段位置
-    public void Look()
+    private void Look()
     {
         int index; //查找在奖励列表的索引
         
@@ -86,7 +86,7 @@ public class GameController : MonoBehaviour
     }
     
     //刷新到下一赛季函数
-    public void Refresh()
+    private void Refresh()
     {
         int nextScore; //下赛季分数
         
