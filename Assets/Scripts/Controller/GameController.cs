@@ -27,6 +27,7 @@ public class GameController : MonoBehaviour
     public int rewardCoin; //每次奖励金币
     public int rewardCount; //奖励列表个数
     public int rewardStep; //一个大段中奖励的个数
+    
     private float height; //每个奖励的高度
     private int seasonCount; //赛季个数
     StringBuilder stringBuilder; //用于连接字符串

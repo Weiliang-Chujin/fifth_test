@@ -15,8 +15,8 @@ public class PlayerController : MonoBehaviour
     public Text levelText; //玩家段位文字
     
     public int score; //玩家分数
-    public int coinNum; //玩家金币数
-    public int level; //玩家段位
+    private int coinNum; //玩家金币数
+    private int level; //玩家段位
 
     void Start()
     {
