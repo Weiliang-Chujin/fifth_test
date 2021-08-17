@@ -11,48 +11,48 @@ public class RewardController : MonoBehaviour
 {
     public GameObject content; //滚动视图的content，奖励列表的父对象
     public RewardPrefab rewardPrefab; //奖励的预制体
-    public PlayerData playerData; //玩家数据类
     public PlayerController playerController; //玩家控制类
+    public GameController gameController; //游戏控制类
 
     public List<RewardPrefab> rewardObjects = new List<RewardPrefab>(); //存入所有生成的奖励对象的list
 
     void Start()
     {
         content.transform.localPosition = new Vector3(0, 0, 0);
-        CreateReward(playerData.score);
+        CreateReward(playerController.score);
     }
 
     //根据玩家分数生成奖励列表
     public void CreateReward(int playerSocre)
     {
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < playerController.rewardCount; i++)
+        for (int i = 0; i < gameController.rewardCount; i++)
         {
             
             RewardPrefab rewardObject = Instantiate(rewardPrefab, content.transform);
 
             //rewardscore为该奖励需要的分数
-            int rewardscore = playerController.minScore + i * playerController.segmentScore;
+            int rewardscore = gameController.minScore + i * gameController.segmentScore;
             stringBuilder.Append("所需分数:");
             stringBuilder.Append(rewardscore);
             rewardObject.scoreText.text = stringBuilder.ToString();
             stringBuilder.Clear();
             
-            if (rewardscore % playerController.levelScore != 0)
+            if (rewardscore % gameController.levelScore != 0)
             {
                 stringBuilder.Append("奖励:");
-                stringBuilder.Append(playerController.rewardCoin);
+                stringBuilder.Append(gameController.rewardCoin);
                 stringBuilder.Append("金币");
                 rewardObject.rewardText.text = stringBuilder.ToString();
                 stringBuilder.Clear();
                 
                 ModifyRewardState(0, rewardObject);
-                rewardObject.receiveButton.onClick.AddListener(()=> { receiveReward(rewardObject); });
+                rewardObject.receiveButton.onClick.AddListener(()=> { ReceiveReward(rewardObject); });
             }
             //1000分设置大段位
             else 
             {
-                int level = (rewardscore - playerController.minScore) / playerController.levelScore + 1;
+                int level = (rewardscore - gameController.minScore) / gameController.levelScore + 1;
                 stringBuilder.Append("大段位");
                 stringBuilder.Append(level);
                 rewardObject.rewardText.text = stringBuilder.ToString();
@@ -96,9 +96,9 @@ public class RewardController : MonoBehaviour
     }
     
     //点击领取奖励按钮领取奖励
-    public void receiveReward(RewardPrefab rewardobj)
+    public void ReceiveReward(RewardPrefab rewardobj)
     {
         ModifyRewardState(1, rewardobj);
-        playerData.modifyPlayerInfo(0, playerController.rewardCoin);
+        playerController.ModifyPlayerInfo(0, gameController.rewardCoin);
     }
 }

@@ -1005,7 +1005,7 @@ MonoBehaviour:
   refreshButton: {fileID: 675451988}
   seasonText: {fileID: 1087130709}
   rewardController: {fileID: 770973857}
-  playerData: {fileID: 770973856}
+  playerController: {fileID: 770973856}
   minScore: 0
   maxScore: 0
   addScore: 0
@@ -1026,7 +1026,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97f24aac96271453d9b4e45e220d890b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 770973855}
+  gameController: {fileID: 770973855}
   totalScore: {fileID: 1629491970}
   totalCoin: {fileID: 2116869481}
   levelText: {fileID: 703092220}
@@ -1048,8 +1048,8 @@ MonoBehaviour:
   content: {fileID: 1161873002}
   rewardPrefab: {fileID: 8451492544317586148, guid: c4944db91bdcf4553992df67458a041c,
     type: 3}
-  playerData: {fileID: 770973856}
-  playerController: {fileID: 770973855}
+  playerController: {fileID: 770973856}
+  gameController: {fileID: 770973855}
   rewardObjects: []
 --- !u!1 &815049218
 GameObject:
@@ -1645,7 +1645,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 528955114}
   m_HandleRect: {fileID: 528955113}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1722,7 +1722,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 1633}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1161873004

@@ -1,119 +1,58 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
 /*
- * 玩家控制类，包括加分、查看、刷新按钮的操作
+ * 玩家控制类，修改玩家的分数、段位和金币
  */
 public class PlayerController : MonoBehaviour
 {
-    public GameObject content; //滚动视图的content对象
-    public Button addButton; //加分按钮
-    public Button lookButton; //查看按钮
-    public Button refreshButton; //刷新按钮
-    public Text seasonText; //赛季文字
+    public GameController gameController; //游戏控制类
+    public Text totalScore; //玩家分数显示文字
+    public Text totalCoin; //玩家金币数显示文字
+    public Text levelText; //玩家段位文字
     
-    public RewardController rewardController; //奖励控制类
-    public PlayerData playerData; //玩家数据类
-    
-    public int minScore; //领取奖励最低分
-    public int maxScore; //领取奖励最高分
-    public int addScore; //每次增加的分数
-    public int levelScore; //一个大段分数
-    public int segmentScore; //领取奖励的分段分数
-    public int rewardCoin; //每次奖励金币
-    public int rewardCount; //奖励列表个数
-    public int rewardStep; //一个大段中奖励的个数
-    private float height; //每个奖励的高度
-    private int seasonCount; //赛季个数
-    StringBuilder stringBuilder; //用于连接字符串
-    
-    
+    public int score; //玩家分数
+    public int coinNum; //玩家金币数
+    public int level; //玩家段位
+
     void Start()
     {
-        minScore = 4000;
-        maxScore = 6000;
-        segmentScore = 200;
-        rewardCount = (maxScore - minScore) / segmentScore + 1;
-        addScore = 100;
-        levelScore = 1000;
-        rewardCoin = 100;
-        rewardStep = levelScore / segmentScore;
-        height = 200;
-        seasonCount = 1;
-        
-        stringBuilder = new StringBuilder();
-        stringBuilder.Append("第");
-        stringBuilder.Append(seasonCount);
-        stringBuilder.Append("赛季");
-        seasonText.text = stringBuilder.ToString();
-        stringBuilder.Clear();
-        
-        addButton.onClick.AddListener(AddScore);
-        lookButton.onClick.AddListener(Look);
-        refreshButton.onClick.AddListener(Refresh);
+        score = 3600;
+        coinNum = 0;
+        ModifyPlayerInfo(0, 0);
     }
 
-    //增加分数函数,每次增加100分,分数上限6000,增加一次分数，判断分数是否能开启下一个奖励，改变该奖励的遮罩
-    public void AddScore()
+    //修改玩家分数、段位和金币显示
+    public void ModifyPlayerInfo(int modifyScore, int modifycoinNum)
     {
-        int index; //查找在奖励列表的索引
+        StringBuilder stringBuilder = new StringBuilder();
         
-        playerData.modifyPlayerInfo(addScore, 0);
-        if (playerData.score >= minScore && playerData.score <= maxScore)
+        //修改金币数
+        coinNum += modifycoinNum;
+        totalCoin.text = coinNum.ToString();
+
+        //修改分数，玩家分数超过最大分数，修改为最大分数
+        score += modifyScore;
+        if (score >= gameController.maxScore)
         {
-            index = (playerData.score - minScore) / segmentScore;
-            rewardController.OperateRewardMask(rewardController.rewardObjects[index], 
-                playerData.score, minScore + index * segmentScore);
+            score = gameController.maxScore;
         }
-    }
-    
-    //查看当前段位情况函数,滚动视图自动滚动到当前达到的最高分数段位置
-    public void Look()
-    {
-        int index; //查找在奖励列表的索引
-        
-        if (playerData.score >= minScore)
+        totalScore.text = score.ToString();
+
+        //修改段位，玩家分数小于4000时没有段位
+        if (score < gameController.minScore)
         {
-            index = (playerData.score - minScore) / segmentScore;
-            
-            //调整视窗坐标
-            content.transform.localPosition = new Vector3(0, - height * index, 0);
+            levelText.text = "无段位";
         }
-    }
-    
-    //刷新到下一赛季函数
-    public void Refresh()
-    {
-        int nextScore; //下赛季分数
-        
-        //修改赛季显示
-        seasonCount++;
-        stringBuilder.Append("第");
-        stringBuilder.Append(seasonCount);
-        stringBuilder.Append("赛季");
-        seasonText.text = stringBuilder.ToString();
-        stringBuilder.Clear();
-        
-        if (playerData.score >= minScore)
+        else
         {
-            //根据上赛季分数，低于4000的不做变换，超过4000的，将超过4000的部分砍掉一半，修改玩家分数
-            nextScore = (playerData.score - minScore) / 2 + minScore;
-            playerData.modifyPlayerInfo(nextScore - playerData.score, 0);
-            
-            //将奖励全部刷新为可领取，根据新赛季分数打开所有奖励的遮罩
-            for (int i = 0; i < rewardCount; i++)
-            {
-                if (i % rewardStep != 0)
-                {
-                    rewardController.ModifyRewardState(0, rewardController.rewardObjects[i]);
-                }
-                rewardController.OperateRewardMask(rewardController.rewardObjects[i], 
-                    nextScore, minScore + i * segmentScore);
-            }
+            level = (score - gameController.minScore) / gameController.levelScore + 1;
+            stringBuilder.Append("大段位");
+            stringBuilder.Append(level);
+            levelText.text = stringBuilder.ToString();
         }
     }
 }
