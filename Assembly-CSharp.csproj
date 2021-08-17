@@ -61,7 +61,7 @@
      <Compile Include="Assets\Scripts\Controller\GameController.cs" />
      <Compile Include="Assets\Scripts\Controller\PlayerController.cs" />
      <Compile Include="Assets\Scripts\Controller\RewardController.cs" />
-     <Compile Include="Assets\Scripts\Data\RewardPrefab.cs" />
+     <Compile Include="Assets\Scripts\View\RewardPrefab.cs" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>/Users/hehuan/fifth_test/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>
