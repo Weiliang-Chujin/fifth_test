@@ -24,15 +24,12 @@ public class GameController : MonoBehaviour
     public int addScore; //每次增加的分数
     public int levelScore; //一个大段分数
     public int segmentScore; //领取奖励的分段分数
-    public int rewardCoin; //每次奖励金币
     public int rewardCount; //奖励列表个数
     public int rewardStep; //一个大段中奖励的个数
     
     private float height; //每个奖励的高度
     private int seasonCount; //赛季个数
-    StringBuilder stringBuilder; //用于连接字符串
-    
-    
+
     void Start()
     {
         minScore = 4000;
@@ -41,17 +38,11 @@ public class GameController : MonoBehaviour
         rewardCount = (maxScore - minScore) / segmentScore + 1;
         addScore = 100;
         levelScore = 1000;
-        rewardCoin = 100;
         rewardStep = levelScore / segmentScore;
         height = 200;
-        seasonCount = 1;
         
-        stringBuilder = new StringBuilder();
-        stringBuilder.Append("第");
-        stringBuilder.Append(seasonCount);
-        stringBuilder.Append("赛季");
-        seasonText.text = stringBuilder.ToString();
-        stringBuilder.Clear();
+        seasonCount = 1;
+        ModiySeasonCount(seasonCount);
         
         addButton.onClick.AddListener(AddScore);
         lookButton.onClick.AddListener(Look);
@@ -67,8 +58,15 @@ public class GameController : MonoBehaviour
         if (playerController.score >= minScore && playerController.score <= maxScore)
         {
             index = (playerController.score - minScore) / segmentScore;
-            rewardController.OperateRewardMask(rewardController.rewardObjects[index], 
-                playerController.score, minScore + index * segmentScore);
+            if (playerController.score >= minScore + index * segmentScore)
+            {
+                rewardController.rewardObjects[index].maskState = 0;
+            }
+            else
+            {
+                rewardController.rewardObjects[index].maskState = 1;
+            }
+            rewardController.rewardObjects[index].OperateRewardMask();
         }
     }
     
@@ -93,11 +91,7 @@ public class GameController : MonoBehaviour
         
         //修改赛季显示
         seasonCount++;
-        stringBuilder.Append("第");
-        stringBuilder.Append(seasonCount);
-        stringBuilder.Append("赛季");
-        seasonText.text = stringBuilder.ToString();
-        stringBuilder.Clear();
+        ModiySeasonCount(seasonCount);
         
         if (playerController.score >= minScore)
         {
@@ -110,11 +104,29 @@ public class GameController : MonoBehaviour
             {
                 if (i % rewardStep != 0)
                 {
-                    rewardController.ModifyRewardState(0, rewardController.rewardObjects[i]);
+                    rewardController.rewardObjects[i].receiveState = 0;
+                    rewardController.rewardObjects[i].ModifyRewardState();
                 }
-                rewardController.OperateRewardMask(rewardController.rewardObjects[i], 
-                    nextScore, minScore + i * segmentScore);
+                if (nextScore >= minScore + i * segmentScore)
+                {
+                    rewardController.rewardObjects[i].maskState = 0;
+                }
+                else
+                {
+                    rewardController.rewardObjects[i].maskState = 1;
+                }
+                rewardController.rewardObjects[i].OperateRewardMask();
             }
         }
+    }
+
+    private void ModiySeasonCount(int seasonCount)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.Append("第");
+        stringBuilder.Append(seasonCount);
+        stringBuilder.Append("赛季");
+        seasonText.text = stringBuilder.ToString();
+        stringBuilder.Clear();
     }
 }

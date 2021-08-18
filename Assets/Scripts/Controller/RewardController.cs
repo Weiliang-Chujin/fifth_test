@@ -5,7 +5,7 @@ using System.Text;
 using UnityEngine;
 
 /*
- * 奖励控制类，生成奖励列表，修改奖励状态，开放奖励和点击按钮领取奖励操作
+ * 奖励控制类，生成奖励列表和点击按钮领取奖励操作
  */
 public class RewardController : MonoBehaviour
 {
@@ -31,74 +31,54 @@ public class RewardController : MonoBehaviour
             
             RewardPrefab rewardObject = Instantiate(rewardPrefab, content.transform);
 
-            //rewardscore为该奖励需要的分数
-            int rewardscore = gameController.minScore + i * gameController.segmentScore;
-            stringBuilder.Append("所需分数:");
-            stringBuilder.Append(rewardscore);
-            rewardObject.scoreText.text = stringBuilder.ToString();
-            stringBuilder.Clear();
+            //修改该奖励所需分数
+            rewardObject.rewardscore = gameController.minScore + i * gameController.segmentScore;
+            rewardObject.ModifyScoreText();
             
-            if (rewardscore % gameController.levelScore != 0)
+            //显示奖励金币文字
+            if (rewardObject.rewardscore % gameController.levelScore != 0)
             {
-                stringBuilder.Append("奖励:");
-                stringBuilder.Append(gameController.rewardCoin);
-                stringBuilder.Append("金币");
-                rewardObject.rewardText.text = stringBuilder.ToString();
-                stringBuilder.Clear();
+                rewardObject.rewardCoin = 100;
+                rewardObject.isReward = true;
+                rewardObject.ModiyRewardText();
                 
-                ModifyRewardState(0, rewardObject);
+                //修改领取状态为可领取奖励
+                rewardObject.receiveState = 0;
+                rewardObject.ModifyRewardState();
                 rewardObject.receiveButton.onClick.AddListener(()=> { ReceiveReward(rewardObject); });
             }
-            //1000分设置大段位
+            //1000分设置大段位，显示段位文字
             else 
             {
-                int level = (rewardscore - gameController.minScore) / gameController.levelScore + 1;
-                stringBuilder.Append("大段位");
-                stringBuilder.Append(level);
-                rewardObject.rewardText.text = stringBuilder.ToString();
-                stringBuilder.Clear();
+                rewardObject.level = (rewardObject.rewardscore - gameController.minScore) / gameController.levelScore + 1;
+                rewardObject.isReward = false;
+                rewardObject.ModiyRewardText();
                 
-                rewardObject.receiveButtonObj.SetActive(false);
-                rewardObject.receiveTextObj.SetActive(false);
+                //隐藏奖励按钮和奖励文字
+                rewardObject.receiveState = 2;
+                rewardObject.ModifyRewardState();
             }
             
-            OperateRewardMask(rewardObject, playerSocre, rewardscore);
+            //根据玩家分数修改奖励遮罩
+            if (playerSocre >= rewardObject.rewardscore)
+            {
+                rewardObject.maskState = 0;
+            }
+            else
+            {
+                rewardObject.maskState = 1;
+            }
+            rewardObject.OperateRewardMask();
+            
             rewardObjects.Add(rewardObject);
-        }
-    }
-    
-    //修改领取奖励状态，0为未领取，1为已领取
-    public void ModifyRewardState(int state, RewardPrefab rewardobj)
-    {
-        if (state == 0)
-        {
-            rewardobj.receiveButtonObj.SetActive(true);
-            rewardobj.receiveTextObj.SetActive(false);
-        }
-        else
-        {
-            rewardobj.receiveButtonObj.SetActive(false);
-            rewardobj.receiveTextObj.SetActive(true);
-        }
-    }
-    
-    //如果玩家分数大于等于该奖励所需分数，则开放奖励，将奖励上的遮罩去除,否则关闭奖励，加上奖励遮罩
-    public void OperateRewardMask(RewardPrefab rewardobj, int playerSocre, int rewardscore)
-    {
-        if (playerSocre >= rewardscore)
-        {
-            rewardobj.maskPanel.SetActive(false);
-        }
-        else
-        {
-            rewardobj.maskPanel.SetActive(true);
         }
     }
     
     //点击领取奖励按钮领取奖励
     private void ReceiveReward(RewardPrefab rewardobj)
     {
-        ModifyRewardState(1, rewardobj);
-        playerController.ModifyPlayerInfo(0, gameController.rewardCoin);
+        rewardobj.receiveState = 1;
+        rewardobj.ModifyRewardState();
+        playerController.ModifyPlayerInfo(0, rewardobj.rewardCoin);
     }
 }

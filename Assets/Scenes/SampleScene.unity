@@ -1031,8 +1031,6 @@ MonoBehaviour:
   totalCoin: {fileID: 2116869481}
   levelText: {fileID: 703092220}
   score: 0
-  coinNum: 0
-  level: 0
 --- !u!114 &770973857
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1645,7 +1643,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 528955114}
   m_HandleRect: {fileID: 528955113}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1969,7 +1967,7 @@ MonoBehaviour:
   m_Content: {fileID: 1161873003}
   m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 0
+  m_MovementType: 1
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0
